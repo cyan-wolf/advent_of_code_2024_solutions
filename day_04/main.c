@@ -18,17 +18,24 @@ int matchNeighboring(char **grid, int rows, int cols, int posR, int posC) {
 	int matches = 0;
 
 	// Single direction buffers.
-	char bufferR[5];
-	char bufferL[5];
-	char bufferU[5];
-	char bufferD[5];
+	char bufferR[5] = {'\0'};
+	char bufferL[5] = {'\0'};
+	char bufferU[5] = {'\0'};
+	char bufferD[5] = {'\0'};
 
 	// Diagonal buffers.
-	char bufferUR[5];
-	char bufferUL[5];
-	char bufferDR[5];
-	char bufferDL[5];
+	char bufferUR[5] = {'\0'};
+	char bufferUL[5] = {'\0'};
+	char bufferDR[5] = {'\0'};
+	char bufferDL[5] = {'\0'};
 
+	// Store all the buffers in a single array.
+	char *buffers[8] = {
+		bufferR, bufferL, bufferU, bufferD,
+		bufferUR, bufferUL, bufferDR, bufferDL,
+	};
+
+	// Fill in the buffers by reading in every direction.
 	for (int offset = 0; offset < 4; offset++) {
 		bufferR[offset] = getAt(grid, rows, cols, posR, posC + offset);
 		bufferL[offset] = getAt(grid, rows, cols, posR, posC - offset);
@@ -41,34 +48,17 @@ int matchNeighboring(char **grid, int rows, int cols, int posR, int posC) {
 		bufferDL[offset] = getAt(grid, rows, cols, posR + offset, posC - offset);
 	}
 
-	if (strcmp(bufferL, "XMAS") == 0) {
-		matches++;
-	}
-	if (strcmp(bufferR, "XMAS") == 0) {
-		matches++;
-	}
-	if (strcmp(bufferU, "XMAS") == 0) {
-		matches++;
-	}
-	if (strcmp(bufferD, "XMAS") == 0) {
-		matches++;
-	}
-	if (strcmp(bufferUR, "XMAS") == 0) {
-		matches++;
-	}
-	if (strcmp(bufferUL, "XMAS") == 0) {
-		matches++;
-	}
-	if (strcmp(bufferDR, "XMAS") == 0) {
-		matches++;
-	}
-	if (strcmp(bufferDL, "XMAS") == 0) {
-		matches++;
+	// Every buffer that contains "XMAS" increased the match count.
+	for (int i = 0; i < 8; i++) {
+		if (strcmp(buffers[i], "XMAS") == 0) {
+			matches++;
+		}
 	}
 
 	return matches;
 }
 
+// Counts how many matches there are starting from an 'X'.
 int countXmas(char **grid, int rows, int cols) {
 	int count = 0;
 
@@ -80,12 +70,11 @@ int countXmas(char **grid, int rows, int cols) {
 			}
 		}
 	}
-
 	return count;
 }
 
 int main() {
-	FILE *file = fopen("input_test2.txt", "r");
+	FILE *file = fopen("input.txt", "r");
 	char *lines[LINE_AMT];
 	char buffer[LINE_LEN];
 	
@@ -110,6 +99,8 @@ int main() {
 	int cols = strlen(lines[0]);
 
 	int count = countXmas(lines, rows, cols);
+
+	printf("Count: %d\n", count);
 
 	fclose(file);
 	return 0;
