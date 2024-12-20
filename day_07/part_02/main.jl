@@ -16,7 +16,7 @@ function read_input()
     return lines
 end
 
-# Generates an array of binary arrays representing 
+# Generates an array of base-3 arrays representing 
 # all the ways to choose different operators.
 function generate_present_lists(num_amt)
     lists = []
@@ -52,9 +52,9 @@ function sum_of_valid_lines(lines)
             line_acc = nums[1] # 1-based indexing
 
             for i in range(1, num_amt - 1)
-                # The `should_mul` array determines what operator 
-                # we choose to perform. 1 means multiplicaiton and 
-                # 0 means addition.
+                # The `op_to_use` array determines what operator 
+                # we choose to perform. 1 means multiplicaiton,
+                # 2 means concatenation and 0 means addition.
                 if op_to_use[i] == 1
                     line_acc *= nums_rest[i]
                 elseif op_to_use[i] == 2
