@@ -22,8 +22,8 @@ function generate_present_lists(num_amt)
     lists = []
     op_amt = num_amt - 1
 
-    for i in range(0, 2^op_amt - 1)
-        bin = digits(i, base=2, pad=op_amt)
+    for i in range(0, 3^op_amt - 1)
+        bin = digits(i, base=3, pad=op_amt)
         push!(lists, bin)
     end
     return lists
@@ -48,15 +48,18 @@ function sum_of_valid_lines(lines)
         nums_rest = nums[2:end] # 1-based indexing
 
         eq_is_valid = false
-        for should_mul in present_lists
+        for op_to_use in present_lists
             line_acc = nums[1] # 1-based indexing
 
             for i in range(1, num_amt - 1)
                 # The `should_mul` array determines what operator 
                 # we choose to perform. 1 means multiplicaiton and 
                 # 0 means addition.
-                if should_mul[i] == 1
+                if op_to_use[i] == 1
                     line_acc *= nums_rest[i]
+                elseif op_to_use[i] == 2
+                    concatenation = string(line_acc) * string(nums_rest[i])
+                    line_acc = parse(Int, concatenation)
                 else
                     line_acc += nums_rest[i]
                 end
