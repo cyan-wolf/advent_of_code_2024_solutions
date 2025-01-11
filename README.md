@@ -1,7 +1,8 @@
 # Advent of Code 2024 Solutions
 
 ## Description
-This project has the source code for the solutions to the various problems in [Advent of Code 2024](https://adventofcode.com/2024).
+This project has the source code for the solutions to the various problems in [Advent of Code 2024](https://adventofcode.com/2024). 
+Each problem is meant to be solved using a different programming language.
 **Note**: Most of the source code isn't directly runnable, as many languages such as Java or C# require extra project files to run.
 
 ## Purpose
