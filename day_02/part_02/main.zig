@@ -1,4 +1,4 @@
-// Incorrect solution (too low).
+// Incorrect solution.
 
 const std = @import("std");
 const Allocator = std.mem.Allocator;
