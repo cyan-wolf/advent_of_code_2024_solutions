@@ -1,0 +1,82 @@
+// Class to store the grid and the positions of "A"s.
+class Input {
+    init(grid, a_positions) {
+        me.grid = grid;
+        me.a_positions = a_positions;
+    }
+}
+
+// Reads from the input file.
+fun getInput() {
+    var lines = io.readLines("input.txt");
+    var grid = [];
+    var a_positions = [];
+
+    for var r = 0; r < lines.length(); r += 1 {
+        // Split the line into individual characters.
+        var line = lines.get(r).split(nil);
+        grid.push(line);
+
+        for var c = 0; c < line.length(); c += 1 {
+            if line.get(c) == "A" {
+                a_positions.push([r, c]);
+            }
+        }
+    }
+    return Input(grid, a_positions);
+}
+
+// Returns the character at the given position in the grid.
+// If the position is out of bounds, "." is returned.
+fun getFromGrid(pos, grid) {
+    var r = pos.get(0);
+    var c = pos.get(1);
+
+    var rows = grid.length();
+    var cols = grid.get(0).length();
+
+    if r >= 0 and r < rows and c >= 0 and c < cols {
+        return grid.get(r).get(c);
+    }
+    return "."; // out of bounds
+}
+
+// Moves the position by the given displacement values.
+fun movePos(pos, dr, dc) {
+    return [pos.get(0) + dr, pos.get(1) + dc];
+}
+
+// Checks whether the given diagonal is valid.
+fun diagonalIsXMas(diagonalSet) {
+    return diagonalSet.has("M") and diagonalSet.has("S");
+}
+
+// Counts the number of X-Mas in the grid.
+fun countXMas(inp) {
+    var grid = inp.grid;
+    var a_positions = inp.a_positions;
+
+    var count = 0;
+
+    for var i = 0; i < a_positions.length(); i += 1 {
+        var pos = a_positions.get(i);
+
+        var diagonal1 = Map();  // hash set
+        diagonal1.set(getFromGrid(movePos(pos, -1, -1), grid), nil);
+        diagonal1.set(getFromGrid(movePos(pos, 1, 1), grid), nil);
+
+        var diagonal2 = Map();  // hash set
+        diagonal2.set(getFromGrid(movePos(pos, 1, -1), grid), nil);
+        diagonal2.set(getFromGrid(movePos(pos, -1, 1), grid), nil);
+
+        if diagonalIsXMas(diagonal1) and diagonalIsXMas(diagonal2) {
+            count += 1;
+        }        
+    }
+    return count;
+}
+
+fun main() {
+    println(countXMas(getInput()));
+}
+main();
