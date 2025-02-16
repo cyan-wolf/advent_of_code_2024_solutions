@@ -76,34 +76,91 @@ processMove :: proc(move: rune, grid: ^Grid, robotPos: ^Pos) {
     acc: [dynamic]rune
     defer delete(acc)
 
+    // Represents displacement.
+    delta := Pos {}
+
     switch move {
         case '>':
-            // TODO
-            //fmt.println("RIGHT")
-
-            ch := getAt(grid, pos)
-
-            for ch != '!' {
-                pos.row += 1
-                
-                // TODO
-                append(&acc, ch)
-
-                ch = getAt(grid, pos)
-            }
-
+            delta.col = 1
+            
         case '<':
-            // TODO
-            fmt.println("LEFT")
+            delta.col = -1
 
         case '^':
-            // TODO
-            fmt.println("UP")
+            delta.row = -1
 
         case 'v':
-            // TODO
-            fmt.println("DOWN")
+            delta.row = 1
     }
+
+    canMove := false
+
+    ch: rune
+    for {
+        ch = getAt(grid, pos)
+
+        if ch == '!' || ch == '#' || ch == '.' {
+            // This means that there's space to move.
+            if ch == '.' {
+                canMove = true
+            }
+            break
+        }
+
+        pos.row += delta.row
+        pos.col += delta.col
+
+        append(&acc, ch)
+    }
+
+    // Update the grid if a move can be performed.
+    if canMove {
+        performMove(robotPos^, delta, acc, grid)
+
+        // Update the robot's position.
+        robotPos.row += delta.row
+        robotPos.col += delta.col
+    }
+}
+
+// Mutates the grid after a move has been processed.
+performMove :: proc(startPos: Pos, delta: Pos, acc: [dynamic]rune, grid: ^Grid) {
+    // Copy the start position into a new variable,
+    // since parameters are readonly.
+    pos := startPos
+
+    // Leave an empty space where the player was.
+    grid[pos.row][pos.col] = '.'
+
+    for ch in acc {
+        // Update the position.
+        pos.row += delta.row
+        pos.col += delta.col
+
+        // Mutate the grid itself.
+        grid[pos.row][pos.col] = ch
+    }
+}
+
+showGrid :: proc(grid: Grid) {
+    for row in grid {
+        fmt.println(row)
+    }
+}
+
+// Calculates the GPS score according to the 
+// problem statement.
+calcGpsScore :: proc(grid: Grid) -> int {
+    score := 0
+
+    for r := 0; r < len(grid); r += 1 {
+        for c := 0; c < len(grid[0]); c+= 1 {
+            if grid[r][c] == 'O' {
+                score += 100 * r + c
+            }
+        }
+    }
+    return score
 }
 
 main :: proc() {
@@ -116,4 +173,5 @@ main :: proc() {
     for move in moves {
         processMove(move, &grid, &robotPos)
     }
+    fmt.println(calcGpsScore(grid))
 }
