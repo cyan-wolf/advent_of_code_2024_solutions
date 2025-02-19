@@ -1,28 +1,55 @@
 ﻿open System
 
-let readInput filename = IO.File.ReadAllLines filename
+type Pos = (int * int)
 
-let main () = 
-    let args = Environment.GetCommandLineArgs ()
+type Input = 
+    Input of
+        grid: char array array
+        * startPos: Pos
+        * endPos: Pos
 
-    let lines = readInput args[1]
+type Direction = 
+    | East
+    | North
+    | West
+    | South
+
+type Universe = 
+    Universe of 
+        seenPositions: Pos Set
+        * accPoints: int
+        * currPos: Pos
+        * currDir: Direction
+
+let readInput filename = 
+    let grid = 
+        IO.File.ReadAllLines filename
+            |> Array.map (fun s -> s.ToCharArray())
 
     let mutable startPos = -1, -1
     let mutable endPos = -1, -1
 
-    for r in 0..lines.Length - 1 do
-        for c in 0..lines[0].Length - 1 do
-            match lines[r][c] with
+    for r in 0..grid.Length - 1 do
+        for c in 0..grid.Length - 1 do
+            match grid[r][c] with
             | 'S' -> 
                 startPos <- r, c
             | 'E' -> 
                 endPos <- r, c
             | _ -> ()
 
-    printfn "%A" startPos
-    printfn "%A" endPos
+    Input (grid, startPos, endPos)
 
-    // TODO
-    // ...
+let exploreUniverse (input: Input) (solutions: byref<int list>) (currUniv: Universe) =
+    ()
+
+let main () =
+    let args = Environment.GetCommandLineArgs ()
+    let filename = args[1] 
+    let input = readInput filename
+
+    //let mutable solutions = []
+    //exploreUniverse input &solutions (Universe (...))
+    ()
 
 main ()
