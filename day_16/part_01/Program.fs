@@ -1,20 +1,29 @@
-﻿open System
+﻿// INCOMPLETE: Solves the test input files,
+// but does not solve the `input.txt` file 
+// (algorithm is not efficient enough).
+
+open System
 
 type Pos = (int * int)
 type Grid = char array array
 
+// Parsed from the input file; needed for the algorithm.
 type Input = {
     Grid: Grid
     StartPos: Pos
     EndPos: Pos
 }
 
+// The direction of the agent moving through the maze.
 type Direction = 
     | East
     | North
     | West
     | South
 
+// Represents a possible universe of traversed positions.
+// Stores the current position and direction of the agent
+// along with the accumulated points.
 type Universe = {
     SeenPositions: Pos Set
     AccPoints: int
@@ -22,7 +31,9 @@ type Universe = {
     CurrDir: Direction
 }
 
+// Parses relevant data from the input file.
 let readInput filename = 
+    // Representation of the maze.
     let grid = 
         IO.File.ReadAllLines filename
             |> Array.map (fun s -> s.ToCharArray())
@@ -30,6 +41,7 @@ let readInput filename =
     let mutable startPos = -1, -1
     let mutable endPos = -1, -1
 
+    // Find the start and end positions of the maze.
     for r in 0..grid.Length - 1 do
         for c in 0..grid.Length - 1 do
             match grid[r][c] with
@@ -45,6 +57,7 @@ let readInput filename =
         EndPos = endPos;
     }
 
+// Used for getting the 4 neighbors of a tile in the maze.
 let getNbrs ((r, c)) = [
     r + 1, c;
     r, c + 1;
@@ -52,7 +65,8 @@ let getNbrs ((r, c)) = [
     r, c - 1;
 ]
 
-let getNeededDirection (currPos: Pos) (nextPos: Pos) = 
+// Calculates the direction that the agent needs to have to get to the given position.
+let getNeededDirection currPos nextPos = 
     let curR, curC = currPos
     let nxtR, nxtC = nextPos
 
@@ -65,7 +79,9 @@ let getNeededDirection (currPos: Pos) (nextPos: Pos) =
     | 0, -1 -> West
     | _ -> failwith "unreachable"
 
-let detTurn (currPos: Pos) (nextPos: Pos) (currDir: Direction) = 
+// Determines the agent's new direction along with the points 
+// accumulated as a result of the turning.
+let detTurn currPos nextPos currDir = 
     let neededDir = getNeededDirection currPos nextPos
 
     match (currDir, neededDir) with
@@ -79,9 +95,13 @@ let detTurn (currPos: Pos) (nextPos: Pos) (currDir: Direction) =
     // Two turns are needed, hence 1000 * 2 points.
     | _ -> neededDir, 2000
 
+// Gets the tile at the given position of the maze.
+// Does not check if position is within bounds.
 let getAtGrid ((r, c): Pos) (grid: Grid) = grid[r][c]
 
-let posIsValid (pos: Pos) (grid: Grid) = 
+// Checks if the given position is traversable by the agent, i.e.
+// it's not out of bounds or a wall tile ('#').
+let posIsValid pos (grid: Grid) = 
     let r, c = pos
     
     let inBounds = r >= 0 
@@ -89,29 +109,26 @@ let posIsValid (pos: Pos) (grid: Grid) =
                           && c >= 0 
                           && c < grid[0].Length
 
-    //printfn "%b, %A, %A" inBounds (getAtGrid pos grid) pos
-
     inBounds && getAtGrid pos grid <> '#'
 
-let rec exploreUniverse 
-    (input: Input) 
-    (solutions: byref<int list>) 
-    (univ: Universe) =
-
-    // printfn "%A" univ.CurrPos
-
+// Explores a universe. Goes in all unexplored directions and calculates the 
+// points accumulated over the course of the path.
+let rec exploreUniverse input (solutions: byref<int list>) univ =
+    // If the current universe reached the end position of the maze,
+    // then the amount of points should be added to the solutions.
     if univ.CurrPos = input.EndPos then
         solutions <- univ.AccPoints :: solutions
 
+    // Check all unexplored neighbors.
     for nbrPos in getNbrs univ.CurrPos do
-        //printfn "%b, %b, %A" (not (univ.SeenPositions.Contains nbrPos)) (posIsValid univ.CurrPos input.Grid ) (nbrPos)
-
         if not (univ.SeenPositions.Contains nbrPos) 
            && posIsValid nbrPos input.Grid 
         then
             let newDir, dirPoints = detTurn univ.CurrPos nbrPos univ.CurrDir
             let pointsToMove = 1
 
+            // Explore the state created by moving to each neighbor,
+            // adding up the necessary points.
             exploreUniverse
                 input
                 &solutions
@@ -127,7 +144,11 @@ let main () =
     let filename = args[1] 
     let input = readInput filename
     
+    // A list of possible solutions,
+    // filled in (mutated) by exploring the various universes 
+    // of possibilities.
     let mutable solutions = []
+
     exploreUniverse 
         input 
         &solutions 
@@ -138,6 +159,7 @@ let main () =
             CurrDir = East;
         }
 
+    // Show the minimum solution.
     printfn "%d" (solutions |> List.min)
 
 main ()
