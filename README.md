@@ -27,3 +27,4 @@ For learning new programming languages!
 | 14  | [Visual Basic](https://learn.microsoft.com/en-us/dotnet/visual-basic/programming-guide/concepts/) | [Zig](https://ziglang.org/learn/overview/)        |
 | 15  | [Odin](https://odin-lang.org/docs/overview/)         |            |
 | 16  | [F#](https://fsharp.org/)           |            |
+| 17  | [D](https://dlang.org/)             |            |
