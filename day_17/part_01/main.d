@@ -3,6 +3,8 @@ import std.string;
 import std.file;
 import std.algorithm;
 import std.conv;
+import std.math.exponential;
+import std.format;
 
 // Represents a computer from the problem statement.
 class Computer
@@ -10,8 +12,10 @@ class Computer
     int regA, regB, regC;
     int[] program;
 
+    bool shouldIncrementInstPr = true;
+
     int instPtr = 0;
-    int[] output = [];
+    string[] output = [];
 
     this(int regA, int regB, int regC, int[] program) 
     {
@@ -23,47 +27,155 @@ class Computer
 
     void runProgram()
     {
-        // TODO
+        while (instPtr < program.length)
+        {
+            runCurrInstruction();
+
+            if (!shouldIncrementInstPr)
+            {
+                shouldIncrementInstPr = true;
+                continue;
+            }
+
+            instPtr += 2;
+        }
+    }
+
+    void runCurrInstruction() 
+    {
+        switch (program[instPtr])
+        {
+            case 0:
+                adv();
+                break;
+
+            case 1:
+                bxl();
+                break;
+
+            case 2:
+                bst();
+                break;
+
+            case 3:
+                jnz();
+                break;
+
+            case 4:
+                bxc();
+                break;
+
+            case 5:
+                out_();
+                break;
+
+            case 6:
+                bdv();
+                break;
+
+            case 7:
+                cdv();
+                break;
+
+            default:
+                writeln("error: unknown instruction");
+                break;
+        }
+    }
+
+    int getLiteralOperand()
+    {
+        return program[instPtr + 1];
+    }
+
+    int getComboOperand()
+    {
+        auto operand = getLiteralOperand();
+
+        switch (operand)
+        {
+            case 0, 1, 2, 3:
+                return operand;
+
+            case 4:
+                return regA;
+
+            case 5:
+                return regB;
+
+            case 6:
+                return regC;
+
+            default:
+                writeln("error: invalid operand: ", operand);
+                return -1;
+        }
+        
     }
 
     void adv() 
     {
-        // TODO
+        int denominator = pow(2, getComboOperand());
+        regA /= denominator;
     }
 
     void bxl()
     {
-        // TODO
+        regB ^= getLiteralOperand();
     }
     
     void bst() 
     {
-        // TODO
+        regB = getComboOperand() % 8;
     }
 
     void jnz()
     {
-        // TODO
+        if (regA != 0)
+        {
+            instPtr = getLiteralOperand();
+            shouldIncrementInstPr = false;
+        }
     }
 
     void bxc()
     {
-        // TODO
+        regB ^= regC;
     }
 
     void out_()
     {
-        // TODO
+        output ~= to!string(getComboOperand() % 8);
     }
 
     void bdv()
     {
-        // TODO
+        int denominator = pow(2, getComboOperand());
+        regB /= denominator;
     }
 
     void cdv()
     {
-        // TODO
+        int denominator = pow(2, getComboOperand());
+        regC /= denominator;
+    }
+
+    string getOutputString() 
+    {
+        return output.join(",");
+    }
+
+    string getDebugString()
+    {
+        auto fmtString = 
+"Register A: %d
+Register B: %d
+Register C: %d
+Instruction PTR: %d";
+
+        return format(
+            fmtString, 
+            regA, regB, regC, instPtr);
     }
 }
 
@@ -104,7 +216,7 @@ Computer readInput(string filename)
 
                 foreach (n; programRange)
                 {
-                    program = program ~ [n];
+                    program ~= n;
                 }
                 break;
 
@@ -122,6 +234,10 @@ void main(string[] args)
     auto filename = args[1];
     auto computer = readInput(filename);
 
-    writeln(computer.regA, " ", computer.regB, " ", computer.regC);
     writeln(computer.program);
+
+    computer.runProgram();
+
+    writeln(computer.getDebugString());
+    writeln("Output: ", computer.getOutputString());
 }
