@@ -15,7 +15,7 @@ For learning new programming languages!
 | 2   | [Go](https://go.dev/doc/)           | [Python](https://www.python.org/about/apps/) and [COBOL](https://www.ibm.com/think/topics/cobol)    |
 | 3   | [Dart](https://dart.dev/language)         | [Swift](https://www.swift.org/)      |
 | 4   | [C](https://en.wikipedia.org/wiki/C_(programming_language) )          | [Roz](https://github.com/cyan-wolf/roz_lang) (my programming language)        |
-| 5   | [C#](https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/overview)           | [Common Lisp](https://common-lisp.net/)**           |
+| 5   | [C#](https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/overview)           | [Common Lisp](https://common-lisp.net/)*           |
 | 6   | [PHP](https://www.php.net/manual/en/introduction.php)          | PHP        |
 | 7   | [Julia](https://docs.julialang.org/en/v1/)        | Julia      |
 | 8   | [Ruby](https://www.ruby-lang.org/en/about/)         | Ruby       |
