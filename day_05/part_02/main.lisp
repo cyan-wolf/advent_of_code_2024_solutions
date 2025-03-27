@@ -44,8 +44,8 @@
                                     (cursor (nth idx-cursor update)))
 
                                 (if (member curr (gethash cursor rules-map))
-                                    (progn () ; TODO: remove element at idx-cursor
-                                           () ; TODO: insert cursor elem at idx-curr
+                                    (progn (list-remove-at update idx-cursor) ; TODO: remove element at idx-cursor
+                                           (list-insert-at update idx-curr cursor) ; TODO: insert cursor elem at idx-curr
                                            (setf needed-insert t)
                                            (setf idx-cursor len)) ; ad-hoc way of breaking out of inner loop 
                                     (incf idx-cursor))) )
@@ -65,6 +65,14 @@
   (let ((len (length seq)))
     (nth (floor len 2) seq)))
 
+; Removes the element at the specified index.
+(defun list-remove-at (lst index)
+  (let ((retval nil))
+    (loop for i from 0 to (- (length lst) 1) do
+          (when (/= i index)
+            (push (nth i lst) retval)))
+    (nreverse retval)))
+
 ; Inserts a value at the specified index.
 (defun list-insert-at (lst index new-value)
   (let ((retval nil))
@@ -79,7 +87,7 @@
 ; Processes the update using the given rules.
 ; Returns the middle element if it was incorrectly ordered, otherwise 0.
 (defun process-update (update rules-map)
-  (if (sort-update-stub update rules-map)
+  (if (sort-update update rules-map)
       (print (get-middle update))
       ; If the update was sorted, then the middle should not be added.
       0))
