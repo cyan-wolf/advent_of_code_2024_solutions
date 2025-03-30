@@ -28,6 +28,7 @@ For learning new programming languages!
 | 15  | [Odin](https://odin-lang.org/docs/overview/)         |            |
 | 16  | [F#](https://fsharp.org/)*           |            |
 | 17  | [D](https://dlang.org/)*             |            |
+| 18  | [R](https://www.r-project.org/)*     |            |
 
 (*) Not finished.
 
