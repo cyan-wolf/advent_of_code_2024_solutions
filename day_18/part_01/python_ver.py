@@ -1,69 +1,52 @@
 import sys
 
-def gen_grid(filename, size, coord_amt):
-    coords = []
-    with open(filename, "r") as f:
-        for line in f.readlines():
-            coord = tuple((int(s) for s in line.split(",")))
-            coords.append(coord)
-
-    grid = [['.' for _ in range(size)] for _ in range(size)]
-
-    for coord in coords[:coord_amt]:
-        (x, y) = coord
-        grid[y][x] = '#'
-
-    return grid
-
-
-def pos_in_bounds(pos, grid):
-    (r, c) = pos
-    return r >= 0 and r < len(grid) and c >= 0 and c < len(grid[0])
-
-
-def display_grid(grid, seen_positions):
-    for r in range(len(grid)):
-        row = [('O' if (r, c) in seen_positions else grid[r][c]) for c in range(len(grid[0]))]
-        print("".join(row))
-
-
-# TODO: Make this use iteration instead of recursion.
-def find_exit(curr_pos, end_pos, grid, seen_positions, min_solution_ref):
-    seen_positions.add(curr_pos)
-
-    if curr_pos == end_pos:
-        solution = len(seen_positions) - 1
-
-        if solution < min_solution_ref["value"]:
-            min_solution_ref["value"] = solution
-            #display_grid(grid, seen_positions)
-            print(solution)
-
-        return
-
-    (curr_r, curr_c) = curr_pos
-
-    nbrs = [
-        (curr_r, curr_c + 1),
-        (curr_r, curr_c - 1),
-        (curr_r + 1, curr_c),
-        (curr_r - 1, curr_c),
-    ]
-
-    for nbr in nbrs:
-        if pos_in_bounds(nbr, grid) and grid[nbr[0]][nbr[1]] != '#' and nbr not in seen_positions:
-            find_exit(nbr, end_pos, grid, seen_positions.copy(), min_solution_ref)
-
-
 def main():
+    # Get the filename, size of the square grid, and 
+    # the cutoff for the number of blocked positions.
     filename = sys.argv[1]
-    size, coord_amt = [int(s) for s in sys.argv[2:]]
+    size, cutoff = map(int, sys.argv[2:])
 
-    grid = gen_grid(filename, size, coord_amt)
+    # Collect all the blocked positions from the filename.
+    blocked_positions = []
+    with open(filename, "r") as f:
+        blocked_positions.extend([tuple(map(int, line.split(","))) for line in f.readlines()])
 
-    min_solution_ref = { "value": float('inf') }
+    # Mark the blocked positions as "seen" since they are inaccessible anyways.
+    seen = set(blocked_positions[:cutoff])
 
-    find_exit((0, 0), (size - 1, size - 1), grid, set(), min_solution_ref)
+    # Set the start and end positions.
+    start_pos = (0, 0)
+    end_pos = (size - 1, size - 1)
 
+    # Stack to store positions to process.
+    stk = [(start_pos, 0)]
+
+    solution = None
+
+    # Process the positions in the stack.
+    for (x, y), dist in stk:
+        # Immediately exit the loop if the 
+        # end position is reached.
+        if (x, y) == end_pos:
+            solution = dist
+            break
+        
+        # Check all the neighbors.
+        nbrs = [
+            (x, y + 1), (x, y - 1), (x + 1, y), (x - 1, y)
+        ]
+        for nx, ny in nbrs:
+            in_bounds = 0 <= nx < size and 0 <= ny < size
+
+            if (nx, ny) not in seen and in_bounds:
+                # Store the neighbor in the stack for later 
+                # processing.
+                stk.append(((nx, ny), dist + 1))
+
+                # Mark the neighbor as seen.
+                seen.add((nx, ny))
+
+    print(solution)
+    
 if __name__ == "__main__":
     main()
