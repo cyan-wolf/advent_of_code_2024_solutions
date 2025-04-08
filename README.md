@@ -29,6 +29,7 @@ For learning new programming languages!
 | 16  | [F#](https://fsharp.org/)*           |            |
 | 17  | [D](https://dlang.org/)*             |            |
 | 18  | [R](https://www.r-project.org/)*     |            |
+| 19  | Python | Python |
 
 (*) Not finished.
 
