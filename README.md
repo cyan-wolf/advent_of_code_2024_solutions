@@ -12,7 +12,7 @@ For learning new programming languages!
 | Day | Part 1       | Part 2     |
 |-----|--------------|------------|
 | 1   | [Haskell](https://www.haskell.org/)      | [Lean](https://lean-lang.org/about/)       |
-| 2   | [Go](https://go.dev/doc/)           | [Python](https://www.python.org/about/apps/) and [COBOL](https://www.ibm.com/think/topics/cobol)    |
+| 2   | [Go](https://go.dev/doc/) and [COBOL](https://www.ibm.com/think/topics/cobol)          | [Python](https://www.python.org/about/apps/)     |
 | 3   | [Dart](https://dart.dev/language)         | [Swift](https://www.swift.org/)      |
 | 4   | [C](https://en.wikipedia.org/wiki/C_(programming_language) )          | [Roz](https://github.com/cyan-wolf/roz_lang) (my programming language)        |
 | 5   | [C#](https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/overview)           | [Common Lisp](https://common-lisp.net/)*           |
@@ -29,7 +29,7 @@ For learning new programming languages!
 | 16  | [F#](https://fsharp.org/)*           |            |
 | 17  | [D](https://dlang.org/)*             |            |
 | 18  | [R](https://www.r-project.org/)*     |            |
-| 19  | Python | Python |
+| 19  | Python and [Prolog](https://www.swi-prolog.org/features.html)* | Python |
 
 (*) Not finished.
 
