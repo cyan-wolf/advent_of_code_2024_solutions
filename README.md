@@ -31,6 +31,7 @@ For learning new programming languages!
 | 18  | [R](https://www.r-project.org/)*     |            |
 | 19  | Python and [Prolog](https://www.swi-prolog.org/features.html)* | Python |
 | 22  | Go | |
+| 23  | C++ | |
 
 (*) Not finished.
 
