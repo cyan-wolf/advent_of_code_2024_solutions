@@ -30,6 +30,8 @@ For learning new programming languages!
 | 17  | [D](https://dlang.org/)*             |            |
 | 18  | [R](https://www.r-project.org/)*     |            |
 | 19  | Python and [Prolog](https://www.swi-prolog.org/features.html)* | Python |
+| 20  | Python* | |
+| 21  | Python* | |
 | 22  | Go | |
 | 23  | C++ | |
 | 24  | C++* | |
